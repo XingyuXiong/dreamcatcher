@@ -8,4 +8,5 @@ urlpatterns = [
     path('login', views.login),
     path('logout', views.logout),
     path('update', views.update),
+    path('<int:angelID>', views.get_angel_info)
 ]

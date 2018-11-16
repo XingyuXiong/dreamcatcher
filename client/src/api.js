@@ -1,16 +1,22 @@
 import axios from 'axios'
 import Cookies from 'js-cookie'
 
-function get(path) {
+function get(path, data) {
   const api_root = window.config.API_ROOT
-  return _trimmed(axios.get(api_root + path, { withCredentials: true }))
+  const config = {
+    withCredentials: true
+  }
+  if (data) {
+    config['params'] = { data: JSON.stringify(data) }
+  }
+  return _trimmed(axios.get(api_root + path, config))
 }
 
 function post(path, data) {
   var csrftoken = Cookies.get('csrftoken');
 
   const api_root = window.config.API_ROOT
-  return _trimmed(axios.post(api_root + path, data, {
+  return _trimmed(axios.post(api_root + path, data || {}, {
     headers: {'X-CSRFToken': csrftoken},
     withCredentials: true,
   }))

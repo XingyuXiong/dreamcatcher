@@ -13,10 +13,7 @@ class JSONMiddleware:
     """
 
     def process_request(self, request):
-        if 'CONTENT_TYPE' in request.META and \
-                'application/json' in request.META['CONTENT_TYPE']:
-            # load the json data
-            data = json.loads(request.body)
+        def json_to_query_set(data):
             # for consistency sake, we want to return
             # a Django QueryDict and not a plain Dict.
             # The primary difference is that the QueryDict stores
@@ -36,12 +33,16 @@ class JSONMiddleware:
                         q_data.update({key: x})
                 else:
                     q_data.update({key: value})
+            return q_data
 
-            if request.method == 'GET':
-                request.GET = q_data
-
-            if request.method == 'POST':
-                request.POST = q_data
+        if request.method == 'POST' and 'CONTENT_TYPE' in request.META and \
+                'application/json' in request.META['CONTENT_TYPE']:
+            # load the json data
+            data = json.loads(request.body)
+            request.POST = json_to_query_set(data)
+        if request.method == 'GET' and 'data' in request.GET:
+            data = json.loads(request.GET['data'])
+            request.GET = json_to_query_set(data)
 
         return None
 

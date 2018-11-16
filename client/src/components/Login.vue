@@ -12,7 +12,7 @@ import CreateAngel from './CreateAngel'
 
 export default {
   components: {
-    'create-angel': CreateAngel,
+    CreateAngel,
   },
   data() {
     return {

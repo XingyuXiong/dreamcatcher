@@ -1,15 +1,19 @@
 <template>
-  <angel :login="login" :angel="angel" @logout="onLogout"></angel>
+  <div>
+    <angel :login="login" :angel="angel" @logout="onLogout"></angel>
+    <task-list :login="login"></task-list>    
+  </div>
 </template>
 
 <script>
 import Angel from './Angel'
+import TaskList from './TaskList'
 import api from '../api'
 
 export default {
   name: 'Home',
   components: {
-    Angel,
+    Angel, TaskList,
   },
   data() {
     return {

@@ -2,8 +2,6 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import ensure_csrf_cookie
 
-import json
-
 from .models import Angel
 from .angel_fetcher import AngelFetcher
 from .middleware import with_angel
@@ -83,9 +81,9 @@ def login(request):
 
 
 @require_POST
-@with_angel
 def logout(request):
-    del request.session['angel_id']
+    if 'angel_id' in request.session:
+        del request.session['angel_id']
     return JsonResponse({
         'success': True,
         'message': 'ok',
@@ -109,3 +107,22 @@ def update(request):
         'success': True,
         'message': 'ok',
     })
+
+
+def get_angel_info(request, angelID):
+    try:
+        angel = Angel.objects.get(pk=angelID)
+        return JsonResponse({
+            'success': True,
+            'message': 'ok',
+            'data': {
+                'nickname': angel.nickname,
+                'registered_name': angel.registered_name,
+                'score': angel.score,
+            }
+        })
+    except Angel.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'message': 'invalid Angel ID'
+        })

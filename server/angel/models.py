@@ -1,5 +1,7 @@
 from django.db import models
 
+import math
+
 
 class Angel(models.Model):
     nickname = models.CharField(max_length=30)
@@ -10,3 +12,6 @@ class Angel(models.Model):
 
     def __str__(self):
         return self.nickname
+
+    def calculate_point(self, cost):
+        return math.floor(cost * 10)
