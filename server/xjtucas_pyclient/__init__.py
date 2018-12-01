@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from urllib.parse import unquote
 """
 Package: xjtucas_pyclient
 Author: xczh <zhuxingchi@tiaozhan.com>
@@ -47,12 +48,12 @@ class Client:
 
     def verify_ticket(self, ticket):
         try:
-            netid, _attr, _pgt = self._cas_client.verify_ticket(ticket)
+            netid, attr, _pgt = self._cas_client.verify_ticket(ticket)
         except:
             netid = None
         if netid is None:
             raise InvalidCASTicketException()
-        return netid
+        return netid, unquote(attr['cn']), attr['employeeNumber']
 
 
 class InvalidCASTicketException(Exception):
