@@ -15,6 +15,7 @@ from .cas_client_v2 import CASClientV2
 from .cas_client_v3 import CASClientV3
 from .cas_client_with_saml_v1 import CASClientWithSAMLV1
 
+
 class CASClient(object):
     def __new__(self, *args, **kwargs):
         version = kwargs.pop('version')
@@ -31,3 +32,28 @@ class CASClient(object):
     @staticmethod
     def getVersion():
         return __VERSION__
+
+# Additional interface for Dreamcatch Project.
+# Correctizer, 2018.12.1
+
+
+class Client:
+    def __init__(self, back):
+        self._cas_client = CASClient(
+            version='CAS_2_SAML_1_0', service_url=back)
+
+    def get_login_url(self):
+        return self._cas_client.get_login_url()
+
+    def verify_ticket(self, ticket):
+        try:
+            netid, _attr, _pgt = self._cas_client.verify_ticket(ticket)
+        except:
+            netid = None
+        if netid is None:
+            raise InvalidCASTicketException()
+        return netid
+
+
+class InvalidCASTicketException(Exception):
+    pass
