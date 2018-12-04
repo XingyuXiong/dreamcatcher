@@ -9,7 +9,7 @@ def _hashed_name(inst, _filename):
     content = inst.avatar.read(inst.avatar.DEFAULT_CHUNK_SIZE)
     m = hashlib.md5()
     m.update(content)
-    return m.hexdigest()
+    return m.hexdigest() + '.jpg'
 
 
 class Angel(models.Model):
@@ -63,7 +63,7 @@ class Group(models.Model):
         }
         if not no_members:
             result['angels'] = [
-                member.to_dict(has_group=False) for member in self.angels
+                member.to_dict(has_group=False) for member in self.angels.all()
             ]
         return result
 

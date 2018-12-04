@@ -20,9 +20,14 @@ def error(message):
     })
 
 
-class ExtractException(Exception):
+class ExceptionWithResponse(Exception):
     def __init__(self, message):
         self.response = error(message)
+
+
+class ExtractException(ExceptionWithResponse):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 def _get_query_set(request):
@@ -30,8 +35,11 @@ def _get_query_set(request):
         if 'data' not in request.GET:
             raise ExtractException(f'missing request arguments')
         query_set = json.loads(request.GET['data'])
-    elif request.method == 'POST':
-        query_set = request.POST
+    elif request.method == 'POST' :
+        if request.META['CONTENT_TYPE'] == 'application/json':
+            query_set = json.loads(request.body)
+        else:
+            query_set = {}
     else:
         raise Exception()
     return query_set
