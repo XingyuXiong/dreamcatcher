@@ -65,3 +65,15 @@ def optional_extract(request, param_keys, file_key=None):
         raise ExtractException(
             f'at least one of {param_keys + file_desc} should be passed')
     return tuple(result)
+
+
+def get_object_with_id_list(request, model):
+    try:
+        id_list = extract(request, 'id_list')
+    except ExtractException as ex:
+        return ex.response
+
+    return ok([
+        angel.to_dict()
+        for angel in model.objects.filter(id__in=id_list).all()
+    ])
