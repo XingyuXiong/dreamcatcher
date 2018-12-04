@@ -1,5 +1,4 @@
 from django.db import models
-from honor.models import Honor
 from django.conf import settings
 import hashlib
 
@@ -23,7 +22,7 @@ class Angel(models.Model):
     group = models.ForeignKey(
         'Group', null=True, on_delete=models.SET_NULL, related_name='angels')
     contribution = models.FloatField(default=0.0)
-    honors = models.ManyToManyField(Honor)
+    honors = models.ManyToManyField('Honor')
 
     def to_dict(self, has_group=True):
         result = {
@@ -49,7 +48,7 @@ class Group(models.Model):
     description = models.TextField()
     leader = models.OneToOneField(
         Angel, on_delete=models.PROTECT, related_name="led_group")
-    honors = models.ManyToManyField(Honor)
+    honors = models.ManyToManyField('Honor')
 
     def to_dict(self, no_members=False):
         result = {
@@ -67,3 +66,8 @@ class Group(models.Model):
                 member.to_dict(has_group=False) for member in self.angels
             ]
         return result
+
+
+class Honor(models.Model):
+    description = models.TextField()
+    logo = models.ImageField()

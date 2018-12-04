@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
-    'angel', 'task', 'honor',
+    'angel', 'task',
 ]
 
 MIDDLEWARE = [

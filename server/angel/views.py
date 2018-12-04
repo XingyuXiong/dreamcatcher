@@ -77,7 +77,6 @@ def update(request):
         except Group.DoesNotExist:
             return error(f'group (id={group_id}) does not exist')
     if avatar is not None:
-        #
         angel.avatar = avatar
     angel.save()
 
